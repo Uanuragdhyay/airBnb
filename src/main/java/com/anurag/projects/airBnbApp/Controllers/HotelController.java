@@ -1,0 +1,31 @@
+package com.anurag.projects.airBnbApp.Controllers;
+
+import com.anurag.projects.airBnbApp.DTOs.HotelDto;
+import com.anurag.projects.airBnbApp.Services.HotelService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/admin/hotels")
+@RequiredArgsConstructor
+@Slf4j
+public class HotelController {
+
+    private final HotelService hotelService;
+
+    @PostMapping
+    public ResponseEntity<HotelDto> createNewHotel(@RequestBody HotelDto hotelDto){
+        //log.info("attempt to create a new hotel");
+        HotelDto hotel = hotelService.createNewHotel(hotelDto);
+        return new ResponseEntity<>(hotel, HttpStatus.CREATED); //<---201--->
+    }
+
+    @GetMapping("/{hotelId}")
+    public ResponseEntity<HotelDto> getHotelById(@PathVariable Long hotelID){
+        HotelDto hotelDto = hotelService.getHotelById(hotelID);
+        return ResponseEntity.ok(hotelDto);
+    }
+}
