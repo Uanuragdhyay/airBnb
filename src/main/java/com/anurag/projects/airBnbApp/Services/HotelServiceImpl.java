@@ -2,8 +2,10 @@ package com.anurag.projects.airBnbApp.Services;
 
 import com.anurag.projects.airBnbApp.DTOs.HotelDto;
 import com.anurag.projects.airBnbApp.Entities.Hotel;
+import com.anurag.projects.airBnbApp.Entities.Room;
 import com.anurag.projects.airBnbApp.Exceptions.ResourceNotFoundException;
 import com.anurag.projects.airBnbApp.Repositories.HotelRepository;
+import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,7 @@ public class HotelServiceImpl implements HotelService {
 
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
+    private final InventoryService inventoryService;
     @Override
     public HotelDto createNewHotel(HotelDto hotelDto) {
         log.info("creating a new hotel with name : {}", hotelDto.getName());
@@ -64,13 +67,20 @@ public class HotelServiceImpl implements HotelService {
     }
 
     @Override
+    @Transactional
     public void deleteHotelById(Long id) {
-        boolean exists = hotelRepository.existsById(id);
-        if(!exists)throw  new ResourceNotFoundException("Hotel not found with Id : "+id);
+        Hotel hotel = hotelRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with Id: " + id));
+
         hotelRepository.deleteById(id);
+        for(Room room: hotel.getRooms()){
+            inventoryService.deleteFutureInventories(room);
+        }
     }
 
     @Override
+    @Transactional
     public void activateHotel(Long hotelId) {
         log.info("activating hotel with id: {}", hotelId);
         Hotel hotel = hotelRepository
@@ -78,7 +88,12 @@ public class HotelServiceImpl implements HotelService {
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with Id: " + hotelId));
 
         hotel.setActive(true);
-        hotelRepository.save(hotel);
+
+        //assuming only doing it once
+        for(Room room : hotel.getRooms()){
+            inventoryService.initializeRoomForAYear(room);
+        }
+
     }
 }
 
