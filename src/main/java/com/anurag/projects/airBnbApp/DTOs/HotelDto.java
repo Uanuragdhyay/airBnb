@@ -8,7 +8,7 @@ public class HotelDto {
     private String name;
     private String city;
     private String[] photos;
-    private String amenities;
+    private String[] amenities;
     private HotelContactInfo hotelContactInfo;
     private boolean active;
 }
