@@ -24,7 +24,7 @@ public class RoomServiceImpl implements RoomService{
     private  final ModelMapper modelMapper;
 
     @Override
-    public RoomDto createNewRoomDto(RoomDto roomDto, Long hotelId) {
+    public RoomDto createNewRoom(RoomDto roomDto, Long hotelId) {
         log.info("creating a new room in hotel with with id: " +hotelId);
         Hotel hotel = hotelRepository
                 .findById(hotelId)
