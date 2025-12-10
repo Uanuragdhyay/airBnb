@@ -4,6 +4,7 @@ import com.anurag.projects.airBnbApp.Entities.Hotel;
 import com.anurag.projects.airBnbApp.Entities.Inventory;
 import com.anurag.projects.airBnbApp.Entities.Room;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     void deleteByRoom(Room room);
+
     @Query("""
             select distinct i.hotel
             from inventory i
@@ -30,7 +32,8 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             @Param("roomsCount") Integer roomsCount,
-            @Param("dateCount") Integer dateCount
+            @Param("dateCount") Long dateCount,
+            Pageable pageable
     );
 
 }

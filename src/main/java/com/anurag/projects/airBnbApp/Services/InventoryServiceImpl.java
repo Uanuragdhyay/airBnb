@@ -2,13 +2,14 @@ package com.anurag.projects.airBnbApp.Services;
 
 import com.anurag.projects.airBnbApp.DTOs.HotelDto;
 import com.anurag.projects.airBnbApp.DTOs.HotelSearchRequestDto;
+import com.anurag.projects.airBnbApp.Entities.Hotel;
 import com.anurag.projects.airBnbApp.Entities.Inventory;
 import com.anurag.projects.airBnbApp.Entities.Room;
 import com.anurag.projects.airBnbApp.Repositories.InventoryRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.time.temporal.ChronoUnit;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,6 +56,16 @@ public class InventoryServiceImpl implements InventoryService{
     @Override
     public Page<HotelDto> searchHotels(HotelSearchRequestDto hotelSearchRequest) {
         Pageable pageable = PageRequest.of(hotelSearchRequest.getPage(), hotelSearchRequest.getSize());
+
+        long dateCount = ChronoUnit.DAYS.between(
+                hotelSearchRequest.getStartDate(),
+                hotelSearchRequest.getEndDate()
+        )+1;
+        Page<Hotel> hotelPage = inventoryRepository.findHotelsWithAvailableInventory(
+                hotelSearchRequest.getCity(),
+                hotelSearchRequest.getStartDate(),hotelSearchRequest.getEndDate(),
+                hotelSearchRequest.getRoomCount(),dateCount, pageable
+        );
         return null;
     }
 }
