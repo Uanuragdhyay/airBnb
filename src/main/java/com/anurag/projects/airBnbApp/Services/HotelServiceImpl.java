@@ -5,6 +5,7 @@ import com.anurag.projects.airBnbApp.Entities.Hotel;
 import com.anurag.projects.airBnbApp.Entities.Room;
 import com.anurag.projects.airBnbApp.Exceptions.ResourceNotFoundException;
 import com.anurag.projects.airBnbApp.Repositories.HotelRepository;
+import com.anurag.projects.airBnbApp.Repositories.RoomRepository;
 import jakarta.transaction.Transactional;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Data
 public class HotelServiceImpl implements HotelService {
+    private final RoomRepository roomRepository;
 
     private final HotelRepository hotelRepository;
     private final ModelMapper modelMapper;
@@ -25,7 +27,6 @@ public class HotelServiceImpl implements HotelService {
     public HotelDto createNewHotel(HotelDto hotelDto) {
         log.info("creating a new hotel with name : {}", hotelDto.getName());
         Hotel hotel = modelMapper.map(hotelDto, Hotel.class);
-        hotel.setActive(false);
         hotelRepository.save(hotel);
         log.info("created a new hotel with id : {}", hotelDto.getId());
         return modelMapper.map(hotel, HotelDto.class);
@@ -73,10 +74,12 @@ public class HotelServiceImpl implements HotelService {
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Hotel not found with Id: " + id));
 
-        hotelRepository.deleteById(id);
         for(Room room: hotel.getRooms()){
-            inventoryService.deleteFutureInventories(room);
+            inventoryService.deleteAllInventories(room);
+            roomRepository.deleteById(room.getId());
         }
+        hotelRepository.deleteById(id);
+
     }
 
     @Override
