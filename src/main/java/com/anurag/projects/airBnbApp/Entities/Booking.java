@@ -2,11 +2,11 @@ package com.anurag.projects.airBnbApp.Entities;
 
 import com.anurag.projects.airBnbApp.Enums.BookingStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -14,6 +14,9 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Booking {
 
     @Id
@@ -47,16 +50,13 @@ public class Booking {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="payment_id")
-    private Payment payment;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus bookingStatus;
 
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal amount;
 
-    // <--- to implement many-to-many relationship we USE JOIN TABLE and NOT JOIN COLUMN--->
     @ManyToMany
     @JoinTable(
             name = "booking_guest",

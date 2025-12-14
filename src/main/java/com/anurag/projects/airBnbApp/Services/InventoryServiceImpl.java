@@ -10,6 +10,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import java.time.temporal.ChronoUnit;
+
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,8 @@ public class InventoryServiceImpl implements InventoryService{
 
 
     private final InventoryRepository inventoryRepository;
+    private final ModelMapper modelMapper;
+
     @Override
     @Transactional
     public void initializeRoomForAYear(Room room) {
@@ -40,6 +44,7 @@ public class InventoryServiceImpl implements InventoryService{
                     .price(room.getBasePrice())
                     .surgeFactor(BigDecimal.ONE)
                     .totalCount(room.getTotalCount())
+                    .reservedCount(0)
                     .closed(false)
                     .build();
 
@@ -64,8 +69,8 @@ public class InventoryServiceImpl implements InventoryService{
         Page<Hotel> hotelPage = inventoryRepository.findHotelsWithAvailableInventory(
                 hotelSearchRequest.getCity(),
                 hotelSearchRequest.getStartDate(),hotelSearchRequest.getEndDate(),
-                hotelSearchRequest.getRoomCount(),dateCount, pageable
+                hotelSearchRequest.getRoomsCount(),dateCount, pageable
         );
-        return null;
+        return hotelPage.map((element)-> modelMapper.map(element, HotelDto.class));
     }
 }

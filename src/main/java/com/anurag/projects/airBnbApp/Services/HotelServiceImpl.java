@@ -1,6 +1,8 @@
 package com.anurag.projects.airBnbApp.Services;
 
 import com.anurag.projects.airBnbApp.DTOs.HotelDto;
+import com.anurag.projects.airBnbApp.DTOs.HotelInfoDto;
+import com.anurag.projects.airBnbApp.DTOs.RoomDto;
 import com.anurag.projects.airBnbApp.Entities.Hotel;
 import com.anurag.projects.airBnbApp.Entities.Room;
 import com.anurag.projects.airBnbApp.Exceptions.ResourceNotFoundException;
@@ -12,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -98,5 +102,20 @@ public class HotelServiceImpl implements HotelService {
         }
 
     }
+
+    @Override
+    public HotelInfoDto getHotelInfoByHotelId(Long hotelId) {
+        Hotel hotel = hotelRepository.findById(hotelId)
+                .orElseThrow(()-> new ResourceNotFoundException("Hotel with id: "+hotelId+" is not found"));
+
+        List<RoomDto> rooms = hotel.getRooms()
+                .stream()
+                .map((element)-> modelMapper.map(element, RoomDto.class))
+                .toList();
+
+        return new HotelInfoDto(modelMapper.map(hotel, HotelDto.class),rooms);
+
+    }
+
 }
 
