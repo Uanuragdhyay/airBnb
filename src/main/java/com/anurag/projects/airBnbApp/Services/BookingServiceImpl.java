@@ -36,7 +36,7 @@ public class BookingServiceImpl implements  BookingService {
         log.info("----------initialising the booking for hotel : {} , room : {}, date{}-{}  --------",bookingRequest.getHotelId(), bookingRequest.getRoomId(), bookingRequest.getCheckInDate(), bookingRequest.getCheckOutDate());
         Hotel hotel = hotelRepository.findById(bookingRequest.getHotelId())
                 .orElseThrow(()-> new ResourceNotFoundException("hotel with id : "+bookingRequest.getHotelId()+" is not present")) ;
-        Room room = roomRepository.findById(bookingRequest.getRoomId())
+        Room room = roomRepository.findByIdAndHotelId(bookingRequest.getRoomId(), bookingRequest.getHotelId())
                 .orElseThrow(()-> new ResourceNotFoundException("room with id : "+bookingRequest.getRoomId()+" is not present")) ;
 
         long daysCount = ChronoUnit.DAYS.between(bookingRequest.getCheckInDate(), bookingRequest.getCheckOutDate())+1;
