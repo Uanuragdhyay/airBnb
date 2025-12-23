@@ -3,12 +3,14 @@ package com.anurag.projects.airBnbApp.Services;
 import com.anurag.projects.airBnbApp.DTOs.BookingDto;
 import com.anurag.projects.airBnbApp.DTOs.BookingRequest;
 import com.anurag.projects.airBnbApp.DTOs.GuestDto;
+import com.anurag.projects.airBnbApp.Entities.Room;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 
-public interface BookingService {
+public interface BookingService   {
      BookingDto initializeBooking(BookingRequest bookingRequest);
 
      BookingDto addGuests(Long bookingId, List<GuestDto> guestDtoList);

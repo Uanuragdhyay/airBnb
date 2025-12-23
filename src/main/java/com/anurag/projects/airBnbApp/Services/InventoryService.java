@@ -1,6 +1,7 @@
 package com.anurag.projects.airBnbApp.Services;
 
 import com.anurag.projects.airBnbApp.DTOs.HotelDto;
+import com.anurag.projects.airBnbApp.DTOs.HotelPriceDto;
 import com.anurag.projects.airBnbApp.DTOs.HotelSearchRequestDto;
 import com.anurag.projects.airBnbApp.Entities.Room;
 import org.springframework.data.domain.Page;
@@ -10,5 +11,5 @@ public interface InventoryService {
 
     void deleteAllInventories(Room room);
 
-    Page<HotelDto> searchHotels(HotelSearchRequestDto hotelSearchRequest);
+    Page<HotelPriceDto> searchHotels(HotelSearchRequestDto hotelSearchRequest);
 }

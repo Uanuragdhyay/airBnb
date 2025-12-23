@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
-@Service
+
 @RequiredArgsConstructor
 public class SurgePricingStrategy implements PricingStrategy{
     private final PricingStrategy wrapped;
@@ -14,5 +14,6 @@ public class SurgePricingStrategy implements PricingStrategy{
     @Override
     public BigDecimal calculatePrice(Inventory inventory) {
         BigDecimal price = wrapped.calculatePrice(inventory).multiply(inventory.getSurgeFactor());
+        return price;
     }
 }

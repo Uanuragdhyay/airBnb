@@ -2,6 +2,7 @@ package com.anurag.projects.airBnbApp.Controllers;
 
 import com.anurag.projects.airBnbApp.DTOs.HotelDto;
 import com.anurag.projects.airBnbApp.DTOs.HotelInfoDto;
+import com.anurag.projects.airBnbApp.DTOs.HotelPriceDto;
 import com.anurag.projects.airBnbApp.DTOs.HotelSearchRequestDto;
 import com.anurag.projects.airBnbApp.Repositories.InventoryRepository;
 import com.anurag.projects.airBnbApp.Services.HotelService;
@@ -22,8 +23,8 @@ public class HotelBrowseController {
     private final HotelService hotelService;
 
     @GetMapping("/search")
-    public ResponseEntity<Page<HotelDto>> searchHotels(@RequestBody HotelSearchRequestDto hotelSearchRequest){
-        Page<HotelDto> page = inventoryService.searchHotels(hotelSearchRequest);
+    public ResponseEntity<Page<HotelPriceDto>> searchHotels(@RequestBody HotelSearchRequestDto hotelSearchRequest){
+        var page = inventoryService.searchHotels(hotelSearchRequest);
         return ResponseEntity.ok(page);
     }
 
