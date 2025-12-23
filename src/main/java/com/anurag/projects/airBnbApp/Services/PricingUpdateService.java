@@ -37,7 +37,7 @@ public class PricingUpdateService {
     public void updatePrices(){
         log.info("🔥 PricingUpdateService scheduler running");
         int page=0;
-        int batchSize = 100;
+        int batchSize = 50;
         while(true){
             Page<Hotel> hotelPage = hotelRepository.findAll(PageRequest.of(page,batchSize));
             if(hotelPage.isEmpty()){
